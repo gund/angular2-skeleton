@@ -10,10 +10,10 @@ Originally created from *Yeoman gulp-angular2* generator.
 - Fixed styles minification [v.0.0.1]
 - Removed unused npm modules [v.0.0.1]
 - Removed potentially dangerous HTML minification from build pipeline [v.0.0.1]
-- Added ability to inline *.html* and *.css* files into components at build stage [v.0.0.1]
-[see](https://github.com/gund/angular2-skeleton#available-plumber-template-methods)
+- Added ability to inline *.html* files into components at build stage [v.0.0.1]
+[see includeAsString()](https://github.com/gund/angular2-skeleton#includeasstringfilestring-donotinjectbooleantrue)
 - Added ability to include CSS, SASS, SCSS and compile/minify them at build time [v.0.0.3]
-[see](https://github.com/gund/angular2-skeleton#available-plumber-template-methods)
+[see includeAsCss(), includeAsSass()](https://github.com/gund/angular2-skeleton#includeascssfilestring-minifybooleanfalse-donotinjectbooleantrue)
 
 ## TODO
 - Add TDD support (Jasmine + Karma) [approx. v.0.0.4-0]
