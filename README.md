@@ -16,7 +16,9 @@ Originally created from *Yeoman gulp-angular2* generator.
 - Add ability to include CSS, SASS, SCSS and compile/minify them at build time [approx. v.0.0.3]
 - Add TDD support (Jasmine + Karma) [approx. v.0.0.4-0]
 - Add Travis CI support [approx. v.0.0.4]
+- Add Selenium Webdriver and Protractor for e2e testing [approx. v0.0.5]
+- Create Yo generator for this skeleton [approx. v.0.1.0]
 
 ## License
 
-[MIT](./LICENSE) © 2016 [gund](https://github.com/gund)
+[MIT](./LICENSE) © 2016 [Alex Malkevich](https://github.com/gund)
