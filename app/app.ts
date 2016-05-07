@@ -16,7 +16,7 @@ import {NamesList} from './services/NameList';
 ])
 @View({
     // templateUrl: './app.html',
-    template: `<%= getAsString('./app/app.html') %>`,
+    template: `<%= includeAsString('./app/app.html') %>`,
     directives: [RouterOutlet, RouterLink]
 })
 class App {

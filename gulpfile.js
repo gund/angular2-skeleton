@@ -152,16 +152,17 @@ gulp.task('build.js.dev', function () {
         .pipe(gulp.dest(PATH.dest.dev.all));
 });
 
+gulp.task('build.html.dev', function () {
+    return gulp.src(['./app/**/*.html', './app/**/*.css'])
+        .pipe(gulp.dest(PATH.dest.dev.all));
+});
 
 gulp.task('build.assets.dev', [
-    'build.js.dev'
-
+    'build.js.dev',
+    'build.html.dev'
 ], function () {
-    gulp.src(['./app/**/*.sass', './app/**/*.scss'])
+    return gulp.src(['./app/**/*.sass', './app/**/*.scss'])
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest(PATH.dest.dev.all));
-
-    return gulp.src(['./app/**/*.html', './app/**/*.css'])
         .pipe(gulp.dest(PATH.dest.dev.all));
 });
 
@@ -355,7 +356,7 @@ function templateLocals() {
     return {
         VERSION: getVersion(),
         APP_BASE: APP_BASE,
-        getAsString: getFileContents
+        includeAsString: getFileContents
     };
 }
 

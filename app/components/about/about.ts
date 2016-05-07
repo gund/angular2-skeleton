@@ -7,7 +7,7 @@ import {NamesList} from '../../services/NameList';
 })
 @View({
     // templateUrl: './components/about/about.html?v=<%= VERSION %>',
-    template: `<%= getAsString('./app/components/about/about.html') %>`,
+    template: `<%= includeAsString('./app/components/about/about.html') %>`,
     directives: [NgFor]
 })
 export class About {
