@@ -2,7 +2,7 @@
 
 > This is the skeleton for angular 2 application
 
-Originally created from *Yeoman gulp-angular2* generator.
+Originally created from *Yeoman [gulp-angular2](https://github.com/x6doooo/generator-gulp-angular2)* generator.
 
 ## Improvements
 - Fixed production gulp builds [v.0.0.1]
