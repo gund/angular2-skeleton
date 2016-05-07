@@ -8,13 +8,18 @@ import {NamesList} from '../../services/NameList';
 @View({
     // templateUrl: './components/about/about.html?v=<%= VERSION %>',
     template: `<%= includeAsString('./app/components/about/about.html') %>`,
+    styles: [
+        `<%= includeAsCss('./app/components/about/about.css') %>`,
+        `<%= includeAsCss('./app/components/about/about.css', true) %>`
+    ],
     directives: [NgFor]
 })
 export class About {
-    constructor(public list: NamesList) {
+    constructor(public list:NamesList) {
     }
-    addName(newname) {
-        this.list.add(newname.value);
-        newname.value = '';
+
+    addName(newName) {
+        this.list.add(newName.value);
+        newName.value = '';
     }
 }

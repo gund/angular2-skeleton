@@ -7,7 +7,8 @@ export class NamesList {
     get() {
         return this.names;
     }
-    add(value: string) {
+
+    add(value:string) {
         this.names.push(value);
     }
 }

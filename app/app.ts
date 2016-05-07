@@ -16,7 +16,11 @@ import {NamesList} from './services/NameList';
 ])
 @View({
     // templateUrl: './app.html',
-    template: `<%= includeAsString('./app/app.html') %>`,
+    template: `<%= includeAsString('./app/app.html', false) %>`,
+    styles: [
+        `<%= includeAsSass('./app/app.scss', false, false) %>`,
+        `<%= includeAsSass('./app/app.scss', true, false) %>`
+    ],
     directives: [RouterOutlet, RouterLink]
 })
 class App {

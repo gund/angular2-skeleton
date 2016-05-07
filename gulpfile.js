@@ -31,6 +31,7 @@ var openResource = require('open');
 
 var tinylr = require('tiny-lr')();
 var connectLivereload = require('connect-livereload');
+var myUtils = require('./gulpfile_utils');
 
 
 // --------------
@@ -96,6 +97,13 @@ var tsProject = tsc.createProject('tsconfig.json', {
 var semverReleases = ['major', 'premajor', 'minor', 'preminor', 'patch',
     'prepatch', 'prerelease'];
 
+var ignoreStyles = [];
+var ignoreStyle = function (file) {
+    var ignoreFile = '!' + file;
+    if (ignoreStyles.indexOf(ignoreFile) !== -1) return;
+    ignoreStyles.push(ignoreFile);
+};
+
 // --------------
 // Clean.
 
@@ -153,7 +161,7 @@ gulp.task('build.js.dev', function () {
 });
 
 gulp.task('build.html.dev', function () {
-    return gulp.src(['./app/**/*.html', './app/**/*.css'])
+    return gulp.src(['./app/**/*.html', './app/**/*.css'].concat(ignoreStyles))
         .pipe(gulp.dest(PATH.dest.dev.all));
 });
 
@@ -161,7 +169,7 @@ gulp.task('build.assets.dev', [
     'build.js.dev',
     'build.html.dev'
 ], function () {
-    return gulp.src(['./app/**/*.sass', './app/**/*.scss'])
+    return gulp.src(['./app/**/*.sass', './app/**/*.scss'].concat(ignoreStyles))
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(PATH.dest.dev.all));
 });
@@ -174,7 +182,7 @@ gulp.task('build.index.dev', function () {
         .pipe(gulp.dest(PATH.dest.dev.all));
 });
 
-gulp.task('build.app.dev', function (done) {
+gulp.task('build.app.dev', ['_plumber_task'], function (done) {
     runSequence('clean.app.dev', 'build.assets.dev', 'build.index.dev', done);
 });
 
@@ -236,7 +244,7 @@ gulp.task('build.init.prod', function () {
 });
 
 gulp.task('build.html.prod', function () {
-    return gulp.src('./app/**/*.html')
+    return gulp.src(['./app/**/*.html'].concat(ignoreStyles))
         .pipe(gulp.dest(PATH.dest.prod.all));
 });
 
@@ -244,7 +252,7 @@ gulp.task('build.assets.prod', [
     'build.js.prod',
     'build.html.prod'
 ], function () {
-    return gulp.src(['./app/**/*.sass', './app/**/*.scss'])
+    return gulp.src(['./app/**/*.sass', './app/**/*.scss'].concat(ignoreStyles))
         .pipe(sass().on('error', sass.logError))
         .pipe(cleanCSS())
         .pipe(gulp.dest(PATH.dest.prod.all));
@@ -259,7 +267,7 @@ gulp.task('build.index.prod', function () {
         .pipe(gulp.dest(PATH.dest.prod.all));
 });
 
-gulp.task('build.app.prod', function (done) {
+gulp.task('build.app.prod', ['_plumber_task'], function (done) {
     // build.init.prod does not work as sub tasks dependencies so placed it here.
     runSequence('clean.app.prod', 'build.init.prod', 'build.assets.prod',
         'build.index.prod', 'clean.tmp', done);
@@ -269,6 +277,20 @@ gulp.task('build.prod', function (done) {
     runSequence('clean.prod', 'build.lib.prod', 'clean.tmp', 'build.app.prod',
         done);
 });
+
+// --------------
+// Plumber task
+
+gulp.task('_plumber_task', gatherPlumberInfo);
+
+function gatherPlumberInfo() {
+    return gulp.src([
+            './app/**/*ts',
+            './app/**/*.html'
+        ])
+        .pipe(plumber())
+        .pipe(template(templateLocals()));
+}
 
 // --------------
 // Version.
@@ -352,14 +374,6 @@ function getVersion() {
     return pkg.version;
 }
 
-function templateLocals() {
-    return {
-        VERSION: getVersion(),
-        APP_BASE: APP_BASE,
-        includeAsString: getFileContents
-    };
-}
-
 function registerBumpTasks() {
     semverReleases.forEach(function (release) {
         var semverTaskName = 'semver.' + release;
@@ -387,6 +401,59 @@ function serveSPA(env) {
     });
 }
 
-function getFileContents(file) {
-    return fs.readFileSync(file, 'utf8');
+// --------------
+// For Templates processed by Plumber
+
+function templateLocals() {
+    return {
+        VERSION: getVersion(),
+        APP_BASE: APP_BASE,
+        includeAsString: getFileProcessor,
+        includeAsCss: getCssFileProcessor,
+        includeAsSass: getSassFileProcessor
+    };
+}
+
+/**
+ * @param {String} file
+ * @param {Boolean=} doNotInject true by default
+ * @returns {FileProcessor}
+ */
+function getFileProcessor(file, doNotInject) {
+    return callFileProcessor(myUtils.getFileProcessor, file, null, doNotInject);
+}
+
+/**
+ * @param {String} file
+ * @param {Boolean=} minify false by default
+ * @param {Boolean=} doNotInject true by default
+ * @return {FileProcessor}
+ */
+function getCssFileProcessor(file, minify, doNotInject) {
+    minify = minify || false;
+    return callFileProcessor(myUtils.getCssFileProcessor, file, {minify: minify}, doNotInject);
+}
+
+/**
+ * @param {String} file
+ * @param {Boolean=} minify false by default
+ * @param {Boolean=} doNotInject true by default
+ * @return {FileProcessor}
+ */
+function getSassFileProcessor(file, minify, doNotInject) {
+    minify = minify || false;
+    return callFileProcessor(myUtils.getSassFileProcessor, file, {minify: minify}, doNotInject);
+}
+
+/**
+ * @param {Function} fn
+ * @param {String} file
+ * @param {Object=} options
+ * @param {Boolean=} doNotInject true by default
+ * @return {FileProcessor}
+ */
+function callFileProcessor(fn, file, options, doNotInject) {
+    doNotInject = typeof doNotInject === 'boolean' ? doNotInject : true;
+    if (doNotInject) ignoreStyle(file);
+    return fn(file, options);
 }
