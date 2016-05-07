@@ -19,11 +19,11 @@ Originally created from *Yeoman gulp-angular2* generator.
 - Add Selenium Webdriver and Protractor for e2e testing [approx. v0.0.5]
 - Create Yo generator for this skeleton [approx. v.0.1.0]
 
-# Features
+## Features
 
-## Available Plumber template methods:
+### Available Plumber template methods:
 
-### includeAsString(file:String, doNotInject:Boolean=true)
+#### includeAsString(file:String, doNotInject:Boolean=true)
 
 Will include content from *file* and if *doNotInject* equals true - will exclude file from being injected into main HTML file.  
 Good for inclusion HTML files.
@@ -34,7 +34,7 @@ Good for inclusion HTML files.
 <%= includeAsString('./app/app.html', false) %>
 ```
   
-### includeAsCss(file:String, minify:Boolean=false, doNotInject:Boolean=true)
+#### includeAsCss(file:String, minify:Boolean=false, doNotInject:Boolean=true)
 
 Will include CSS *file* and if *minify* equals true - minify it's content; if *doNotInject* equals true - will exclude file from being injected into main HTML file.  
 Good for inclusion CSS files.
@@ -45,10 +45,10 @@ Good for inclusion CSS files.
 <%= includeAsCss('./app/app.css', true) %>
 ```
   
-### includeAsSass(file:String, minify:Boolean=false, doNotInject:Boolean=true)
+#### includeAsSass(file:String, minify:Boolean=false, doNotInject:Boolean=true)
 
 Will include SASS or SCSS *file* and if *minify* equals true - minify it's content; if *doNotInject* equals true - will exclude file from being injected into main HTML file.  
-Good for inclusion CSS files.
+Good for inclusion SASS/SCSS files.
   
 **Usage:**
   
@@ -57,6 +57,7 @@ Good for inclusion CSS files.
 <!-- or like this -->
 <%= includeAsSass('./app/app.scss', true) %>
 ```
+  
   
 ***
 
